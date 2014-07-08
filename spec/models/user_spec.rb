@@ -61,6 +61,14 @@ describe User do
       let(:unfollowed_post) do
         FactoryGirl.create(:micropost, user:FactoryGirl.create(:user))
       end
+      let(:followed_user) { FactoryGirl.create(:user) }
+
+      before do
+        @user.follow!(followed_user)
+        3.times do
+          followed_user.microposts.create(content: "Lorem ipsum")
+        end
+      end
 
       its(:feed) { should include(newer_micropost) }
       its(:feed) { should include(older_micropost) }
@@ -79,6 +87,7 @@ describe User do
         expect(Micropost.where(id: micropost.id)).to be_empty
       end
     end
+
   end
 
   describe "with admin attribute set to 'true'" do
